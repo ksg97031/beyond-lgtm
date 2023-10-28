@@ -1,0 +1,46 @@
+name: "🚀 STEP 1 - Initialize Scan"
+
+on:
+  # Trigger the workflow when changes are pushed to specific paths.
+  push:
+    paths:
+      - queue_files/*.txt
+
+  # Trigger the workflow after the completion of the "⛴️ Fetch Github Repositories" workflow.
+  workflow_run:
+    workflows: ["⛴️ Fetch Github Repositories"]
+    types:
+      - completed
+
+  # Manually trigger the workflow if needed.
+  workflow_dispatch:
+
+jobs:
+  OSAudit:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Initialize
+        # Run the initialization script.
+        run: |
+          ./scripts/initialize.sh
+
+      - name: Git Auto Commit
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          # Optional. Local and remote branch name where commit is going to be pushed
+          #  to. Defaults to the current branch.
+          #  You might need to set `create_branch: true` if the branch does not exist.
+          branch: gh-actions
+
+          # Optional. Create given branch name in local and remote repository.
+          create_branch: true
+
+          # Optional. Commit message for the created commit.
+          # Defaults to "Apply automatic changes"
+          commit_message: Initialize the before scanning
