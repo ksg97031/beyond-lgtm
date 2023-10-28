@@ -31,6 +31,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: 'gh-actions'
 
       - name: Initialize
         # Run the initialization script.
