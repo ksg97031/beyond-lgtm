@@ -1,0 +1,42 @@
+name: "⛴️ STEP 1 - Download Github Repositories"
+
+on:
+  # Uncomment if you want to schedule scans
+  # schedule:
+  #   - cron: '0 0,12 * * *'
+
+  workflow_dispatch:
+    inputs:
+      language:
+        description: 'Filter repositories by coding language'
+        required: true
+        default: 'python'
+      limit:
+        description: 'Maximum number of repositories to fetch'
+        required: true
+        default: '100'
+      stars:
+        description: 'Filter on number of stars'
+        required: true
+        default: '500'
+
+jobs:
+  fetch-repos:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download Repositories
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh search repos --stars ">${{ github.event.inputs.stars }}" --language=${{ github.event.inputs.language }} --jq ".[].url" --json "url" --limit=${{ github.event.inputs.limit }} > queue_files/$(date +%s).txt
+
+      - name: Git Auto Commit
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Download Repositories!
