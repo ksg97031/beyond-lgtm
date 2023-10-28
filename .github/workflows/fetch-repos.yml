@@ -1,4 +1,4 @@
-name: "⛴️ STEP 1 - Download Github Repositories"
+name: "⛴️ STEP 1 - Fetch Github Repositories"
 
 on:
   # Uncomment if you want to schedule scans
@@ -30,7 +30,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Download Repositories
+      - name: Fetch Repositories
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -39,4 +39,4 @@ jobs:
       - name: Git Auto Commit
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: Download Repositories!
+          commit_message: Fetch Repository List into the queue_files directory
