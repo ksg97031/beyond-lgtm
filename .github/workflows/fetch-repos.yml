@@ -1,10 +1,6 @@
 name: "⛴️ STEP 1 - Fetch Github Repositories"
 
 on:
-  # Uncomment if you want to schedule scans
-  # schedule:
-  #   - cron: '0 0,12 * * *'
-
   workflow_dispatch:
     inputs:
       language:
@@ -39,4 +35,15 @@ jobs:
       - name: Git Auto Commit
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
+          # Optional. Local and remote branch name where commit is going to be pushed
+          #  to. Defaults to the current branch.
+          #  You might need to set `create_branch: true` if the branch does not exist.
+          branch: gh-actions
+
+          # Optional. Create given branch name in local and remote repository.
+          create_branch: true
+
+          # Optional. Commit message for the created commit.
+          # Defaults to "Apply automatic changes"
           commit_message: Fetch Repository List into the queue_files directory
+
