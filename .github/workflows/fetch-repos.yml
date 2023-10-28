@@ -1,4 +1,4 @@
-name: "⛴️ STEP 1 - Fetch Github Repositories"
+name: "⛴️  Fetch Github Repositories"
 
 on:
   workflow_dispatch:
