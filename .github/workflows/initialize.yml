@@ -1,4 +1,4 @@
-name: "🚀 STEP 1 - Initialize Scan"
+name: "🚀 Initialize Scan"
 
 on:
   # Trigger the workflow when changes are pushed to specific paths.
@@ -14,9 +14,16 @@ on:
 
   # Manually trigger the workflow if needed.
   workflow_dispatch:
+    inputs:
+      size:
+        description: 'Specify the size of the targets for splitting'
+        required: true
+        # During my Python testing, 30 repositories is the optimal size.
+        # In another programming language, you may need to further reduce the size.
+        default: '30'
 
 jobs:
-  OSAudit:
+  initialize:
     runs-on: ubuntu-latest
 
     permissions:
@@ -29,6 +36,10 @@ jobs:
         # Run the initialization script.
         run: |
           ./scripts/initialize.sh
+          ./scripts/split_queue.sh ${{ github.event.inputs.size }}
+
+          # The file that will be scanned is output_files/scan_targets.txt
+          test -f output_files/scan_targets.txt
 
       - name: Git Auto Commit
         uses: stefanzweifel/git-auto-commit-action@v5

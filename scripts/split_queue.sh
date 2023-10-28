@@ -19,8 +19,8 @@ echo "Size is $size"
 # Choose a random file from the "queue" directory
 file_to_process=$(ls queue/*.txt | shuf -n 1)
 
-# Extract the first 'size' lines from the selected file to create "targets.txt"
-head -n $size "$file_to_process" > targets.txt
+# Extract the first 'size' lines from the selected file to create "output_files/scan_targets.txt"
+head -n $size "$file_to_process" > output_files/scan_targets.txt
 
 # Remove the first 'size' lines from the original file
 next=$(($size + 1))
