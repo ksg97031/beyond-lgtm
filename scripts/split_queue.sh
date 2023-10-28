@@ -1,6 +1,6 @@
 #!/bin/bash
-# Check if the "queue" directory exists and is not empty
-if [ -n "$(ls -A queue 2>/dev/null)" ]; then
+# Check if the "queue_files" directory exists and is not empty
+if [ -n "$(ls -A queue_files 2>/dev/null)" ]; then
   echo "Contains Queue Files"
 else
   echo "Empty (or does not exist)"
@@ -16,8 +16,8 @@ fi
 
 echo "Size is $size"
 
-# Choose a random file from the "queue" directory
-file_to_process=$(ls queue/*.txt | shuf -n 1)
+# Choose a random file from the "queue_files" directory
+file_to_process=$(ls queue_files/*.txt | shuf -n 1)
 
 # Extract the first 'size' lines from the selected file to create "output_files/scan_targets.txt"
 head -n $size "$file_to_process" > output_files/scan_targets.txt

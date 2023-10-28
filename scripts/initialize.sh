@@ -8,5 +8,5 @@ for QUEUE_FILE in queue_files/*.txt; do
     comm -23 <(sort "$QUEUE_FILE") <(sort $SCAN_RESULT) > "$QUEUE_FILE.temp"
 
     # Replace the original queue file with the filtered one
-    mv "$QUEUE_FILE.temp" "$file"
+    mv "$QUEUE_FILE.temp" "$QUEUE_FILE"
 done
