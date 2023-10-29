@@ -72,6 +72,7 @@ jobs:
       uses: github/codeql-action/analyze@v2
       with:
         category: "/language:${{matrix.language}}"
+        upload: "never"
 
     - name: Git Auto Commit
       uses: stefanzweifel/git-auto-commit-action@v5
