@@ -8,6 +8,16 @@ on:
 
   # Manually trigger the workflow if needed.
   workflow_dispatch:
+    inputs:
+      language:
+        description: 'Language to scan'
+        required: true
+        default: 'python'
+
+      repo:
+        description: 'Repository to scan'
+        required: true
+        default: 'ksg97031/test_projects'
 
 jobs:
   analyze:
@@ -21,30 +31,20 @@ jobs:
     timeout-minutes: ${{ (matrix.language == 'swift' && 120) || 360 }}
     permissions:
       actions: read
-      contents: read
+      contents: write
       security-events: write
-
-    strategy:
-      fail-fast: false
-      matrix:
-        language: [ "python" ]
-        #language: [ $detected-codeql-languages ]
-        # CodeQL supports [ $supported-codeql-languages ]
-        # Use only 'java-kotlin' to analyze code written in Java, Kotlin or both
-        # Use only 'javascript-typescript' to analyze code written in JavaScript, TypeScript or both
-        # Learn more about CodeQL language support at https://aka.ms/codeql-docs/language-support
-
+      
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
-        repository: 'ksg97031/test_projects'
+        repository: ${{ github.event.inputs.repo }}
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
       with:
-        languages: ${{ matrix.language }}
+        languages: ${{ github.event.inputs.language }}
         # If you wish to specify custom queries, you can do so here or in a config file.
         # By default, queries listed here will override any specified in a config file.
         # Prefix the list here with "+" to use these queries and those in the config file.
@@ -73,22 +73,13 @@ jobs:
       with:
         category: "/language:${{matrix.language}}"
         upload: "never"
+        upload-database: false
+        sarif-output: "codeql_results.sarif"
 
-    - name: Git Auto Commit
-      uses: stefanzweifel/git-auto-commit-action@v5
+    - uses: actions/upload-artifact@v3
       with:
-        # Optional. Local and remote branch name where commit is going to be pushed
-        #  to. Defaults to the current branch.
-        #  You might need to set `create_branch: true` if the branch does not exist.
-        branch: gh-actions
-
-        # Optional. Create given branch name in local and remote repository.
-        create_branch: true
-
-        # Optional. Commit message for the created commit.
-        # Defaults to "Apply automatic changes"
-        commit_message: Upload Scan Result!
-
+        name: codeql_results
+        path: "codeql_results.sarif"
 
     #- name: Call Recursive
     #  env:
