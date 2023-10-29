@@ -27,8 +27,8 @@ jobs:
     #   - https://gh.io/supported-runners-and-hardware-resources
     #   - https://gh.io/using-larger-runners
     # Consider using larger runners for possible analysis time improvements.
-    runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
-    timeout-minutes: ${{ (matrix.language == 'swift' && 120) || 360 }}
+    runs-on: ${{ (github.event.inputs.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
+    timeout-minutes: ${{ (github.event.inputs.language == 'swift' && 120) || 360 }}
     permissions:
       actions: read
       contents: write
@@ -71,15 +71,22 @@ jobs:
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
       with:
-        category: "/language:${{matrix.language}}"
+        category: "/language:${{ github.event.inputs.language }}"
         upload: "never"
         upload-database: false
-        sarif-output: "codeql_results.sarif"
+
+    - name: Debugg
+      # Run the initialization script.
+      run: |
+        pwd
+        id
+        ls -al
+        ls -alt ../results
 
     - uses: actions/upload-artifact@v3
       with:
         name: codeql_results
-        path: "codeql_results.sarif"
+        path: "/home/runner/work/beyond-lgtm/results/${{ github.event.inputs.language }}.sarif"
 
     #- name: Call Recursive
     #  env:
